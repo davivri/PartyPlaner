@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Nadja's Party Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #FFE5B4 0%, #FFCCCB 50%, #87CEEB 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(45deg, #FF6B6B, #FFE66D, #4ECDC4);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            background: #f8f9fa;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FF6B6B;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            transition: width 0.3s ease;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #4ECDC4;
+        }
+
+        .category {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header:hover {
+            background: linear-gradient(135deg, #e9ecef, #dee2e6);
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .category-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .category-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .category.expanded .category-content {
+            display: block;
+        }
+
+        .category.expanded .category-header {
+            background: linear-gradient(135deg, #4ECDC4, #45B7B8);
+            color: white;
+        }
+
+        .subcategory {
+            margin-bottom: 20px;
+        }
+
+        .subcategory-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .todo-item.completed {
+            background: linear-gradient(135deg, #E8F5E8, #F0FFF0);
+            opacity: 0.8;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .todo-checkbox.checked {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .todo-item:hover .todo-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #FFC107;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .add-todo {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            border: 2px dashed #4ECDC4;
+        }
+
+        .add-todo input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .add-todo button {
+            padding: 10px 15px;
+            background: #4ECDC4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            border-left: 4px solid #FF6B6B;
+        }
+
+        .priority-medium {
+            border-left: 4px solid #FFC107;
+        }
+
+        .priority-low {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .budget-tracker {
+            background: linear-gradient(135deg, #E3F2FD, #F3E5F5);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #9C27B0;
+        }
+
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .budget-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #9C27B0;
+        }
+
+        .budget-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .budget-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .budget-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .budget-category {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .budget-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #FF6B6B;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Enhanced Mobile Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            .container {
+                border-radius: 10px;
+                margin: 0;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+                line-height: 1.2;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: white;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+                text-align: left;
+            }
+
+            .progress-bar {
+                width: 60px;
+                margin-top: 0;
+                margin-left: 10px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .search-box {
+                min-width: auto;
+                padding: 12px 15px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .budget-tracker {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .budget-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .budget-items {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .budget-item {
+                padding: 12px;
+            }
+
+            .category {
+                margin-bottom: 20px;
+            }
+
+            .category-header {
+                padding: 15px;
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .category-title {
+                font-size: 1.1rem;
+            }
+
+            .category-stats {
+                flex-direction: row;
+                justify-content: center;
+                gap: 15px;
+                font-size: 0.85rem;
+            }
+
+            .category-content {
+                padding: 15px;
+            }
+
+            .subcategory-title {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+
+            .todo-item {
+                padding: 12px 10px;
+                margin-bottom: 8px;
+                flex-wrap: wrap;
+            }
+
+            .todo-text {
+                font-size: 0.9rem;
+                line-height: 1.3;
+                margin-right: 10px;
+            }
+
+            .todo-actions {
+                opacity: 1; /* Always visible on mobile */
+                margin-top: 5px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .action-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .add-todo {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .add-todo input {
+                padding: 12px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            .add-todo button {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 12px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            .modal-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal-actions .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 3px;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .stats-bar {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .stat-item {
+                padding: 12px;
+            }
+
+            .stat-number {
+                font-size: 1.3rem;
+            }
+
+            .main-content {
+                padding: 10px;
+            }
+
+            .budget-items {
+                grid-template-columns: 1fr;
+            }
+
+            .category-header {
+                padding: 12px;
+            }
+
+            .category-title {
+                font-size: 1rem;
+            }
+
+            .category-content {
+                padding: 12px;
+            }
+
+            .todo-item {
+                padding: 10px 8px;
+            }
+
+            .todo-text {
+                font-size: 0.85rem;
+            }
+
+            .action-btn {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .todo-checkbox {
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+            }
+
+            .action-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+
+            .btn {
+                min-height: 44px;
+            }
+
+            .add-todo input,
+            .add-todo button {
+                min-height: 44px;
+            }
+
+            .category-header {
+                min-height: 60px;
+            }
+
+            .todo-actions {
+                opacity: 1; /* Always visible on touch devices */
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .header {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-bar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+
+            .stat-item {
+                flex: 1;
+                min-width: 120px;
+                margin: 5px;
+            }
+
+            .budget-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎉 Nadja's Party Planner</h1>
+            <p>01. August 2025 • Budget: 500€ • Countdown läuft!</p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">Aufgaben gesamt</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">Erledigt</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="remainingTasks">0</div>
+                <div class="stat-label">Offen</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="progressPercent">0%</div>
+                <div class="stat-label">Fortschritt</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Controls -->
+            <div class="controls">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Aufgaben durchsuchen...">
+                <button class="btn btn-primary" onclick="showAllCategories()">Alle anzeigen</button>
+                <button class="btn btn-secondary" onclick="showOnlyIncomplete()">Nur offene</button>
+                <button class="btn btn-secondary" onclick="showOnlyCompleted()">Nur erledigte</button>
+                <button class="btn btn-primary" onclick="exportProgress()">📤 Export</button>
+            </div>
+
+            <!-- Budget Tracker -->
+            <div class="budget-tracker">
+                <div class="budget-header">
+                    <div class="budget-title">💰 Budget-Tracker</div>
+                    <div class="budget-amount">500€ verfügbar</div>
+                </div>
+                <div class="budget-items">
+                    <div class="budget-item">
+                        <div class="budget-category">Dekoration</div>
+                        <div class="budget-value">~50€</div>
+                    </div>
+                    <div class="budget-item">
+                        <div class="budget-category">Essen</div>
+                        <div class="budget-value">~300€</div>
+                    </div>
+                    <div class="budget-item">
+                        <div class="budget-category">Getränke</div>
+                        <div class="budget-value">~100€</div>
+                    </div>
+                    <div class="budget-item">
+                        <div class="budget-category">Sonstiges</div>
+                        <div class="budget-value">~50€</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div id="categoriesContainer">
+                <!-- Categories will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Aufgabe bearbeiten</div>
+            <div class="form-group">
+                <label for="editTaskText">Aufgabe:</label>
+                <textarea id="editTaskText" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editTaskPriority">Priorität:</label>
+                <select id="editTaskPriority">
+                    <option value="low">Niedrig</option>
+                    <option value="medium">Mittel</option>
+                    <option value="high">Hoch</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeEditModal()">Abbrechen</button>
+                <button class="btn btn-primary" onclick="saveTask()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Party planning data structure
+        const partyData = {
+            "technische-vorbereitung": {
+                title: "🔧 Technische Vorbereitung",
+                priority: "high",
+                subcategories: {
+                    "einladung": {
+                        title: "✅ Einladung fertigstellen",
+                        tasks: [
+                            { text: "Web-Einladung erstellen", completed: true, priority: "high" },
+                            { text: "Mobile Optimierung", completed: true, priority: "high" },
+                            { text: "Power Automate Integration", completed: true, priority: "high" },
+                            { text: "Power Automate Flow einrichten", completed: false, priority: "high" },
+                            { text: "JSON Schema aus power-automate-schema.json kopieren", completed: false, priority: "high" },
+                            { text: "E-Mail-Benachrichtigungen konfigurieren", completed: false, priority: "high" },
+                            { text: "Flow testen", completed: false, priority: "high" },
+                            { text: "GitHub Repository erstellen", completed: false, priority: "high" },
+                            { text: "Dateien hochladen", completed: false, priority: "high" },
+                            { text: "GitHub Pages aktivieren", completed: false, priority: "high" },
+                            { text: "URL testen", completed: false, priority: "high" }
+                        ]
+                    },
+                    "verschicken": {
+                        title: "📱 Einladung verschicken",
+                        tasks: [
+                            { text: "Gästeliste erstellen (~15 Personen)", completed: false, priority: "high" },
+                            { text: "Einladungstext für WhatsApp/E-Mail vorbereiten", completed: false, priority: "medium" },
+                            { text: "Link verschicken (spätestens 3 Wochen vorher)", completed: false, priority: "high" },
+                            { text: "Erinnerung senden (1 Woche vorher)", completed: false, priority: "medium" }
+                        ]
+                    }
+                }
+            },
+            "location-setup": {
+                title: "🏠 Location & Setup",
+                priority: "high",
+                subcategories: {
+                    "vorbereitung": {
+                        title: "🏡 Zuhause vorbereiten",
+                        tasks: [
+                            { text: "Haus/Wohnung aufräumen und putzen", completed: false, priority: "high" },
+                            { text: "Sommerliche Deko besorgen (Girlanden, Ballons)", completed: false, priority: "medium" },
+                            { text: '"40" Zahlen-Ballons besorgen', completed: false, priority: "medium" },
+                            { text: "Lichterketten für Atmosphäre", completed: false, priority: "low" },
+                            { text: "Stühle von Nachbarn/Familie leihen", completed: false, priority: "medium" },
+                            { text: "Gartenmöbel aufstellen (falls Garten vorhanden)", completed: false, priority: "low" },
+                            { text: "Playlist mit Nadjas Lieblingsliedern erstellen", completed: false, priority: "medium" },
+                            { text: "Lautsprecher/Musikanlage testen", completed: false, priority: "medium" }
+                        ]
+                    }
+                }
+            },
+            "essen-trinken": {
+                title: "🍽️ Essen & Trinken",
+                priority: "high",
+                subcategories: {
+                    "essen": {
+                        title: "🥘 Essen planen",
+                        tasks: [
+                            { text: "Menü festlegen (basierend auf finaler Gästezahl)", completed: false, priority: "high" },
+                            { text: "Fingerfood/Buffet-Stil für ~15 Personen", completed: false, priority: "high" },
+                            { text: "Vegetarische/vegane Optionen berücksichtigen", completed: false, priority: "medium" },
+                            { text: "Einkaufsliste erstellen", completed: false, priority: "high" },
+                            { text: "Großeinkauf (2-3 Tage vorher)", completed: false, priority: "high" },
+                            { text: "Salate, Dips, kalte Speisen vorbereiten (1 Tag vorher)", completed: false, priority: "high" },
+                            { text: "Warme Speisen am Partytag", completed: false, priority: "high" }
+                        ]
+                    },
+                    "getraenke": {
+                        title: "🥤 Getränke",
+                        tasks: [
+                            { text: "Alkoholische Getränke (Wein, Bier, Sekt)", completed: false, priority: "medium" },
+                            { text: "Alkoholfreie Alternativen", completed: false, priority: "medium" },
+                            { text: "Wasser, Säfte", completed: false, priority: "medium" },
+                            { text: "Eis besorgen (am Partytag)", completed: false, priority: "high" }
+                        ]
+                    },
+                    "torte": {
+                        title: "🎂 Geburtstagstorte",
+                        tasks: [
+                            { text: "Torte bestellen oder backen", completed: false, priority: "high" },
+                            { text: "40 Kerzen besorgen", completed: false, priority: "medium" },
+                            { text: "Tortenheber und Teller bereitstellen", completed: false, priority: "low" }
+                        ]
+                    }
+                }
+            },
+            "geschenke": {
+                title: "🎁 Geschenke & Überraschungen",
+                priority: "medium",
+                subcategories: {
+                    "hauptgeschenk": {
+                        title: "🎁 Hauptgeschenk",
+                        tasks: [
+                            { text: "Geschenk für Nadja besorgen", completed: false, priority: "high" },
+                            { text: "Geschenk schön verpacken", completed: false, priority: "medium" },
+                            { text: "Versteck für Geschenk finden", completed: false, priority: "low" }
+                        ]
+                    },
+                    "erinnerungen": {
+                        title: "📸 Erinnerungen",
+                        tasks: [
+                            { text: "Alte Fotos von Nadja sammeln", completed: false, priority: "medium" },
+                            { text: "Schöne Präsentation basteln", completed: false, priority: "medium" },
+                            { text: "Gästebuch organisieren", completed: false, priority: "low" },
+                            { text: "Kamera/Handy für Fotos bereithalten", completed: false, priority: "low" }
+                        ]
+                    }
+                }
+            },
+            "geheimhaltung": {
+                title: "🤫 Geheimhaltung",
+                priority: "high",
+                subcategories: {
+                    "geheim": {
+                        title: "🔒 Nadja nichts verraten",
+                        tasks: [
+                            { text: "Familie/enge Freunde briefen", completed: false, priority: "high" },
+                            { text: "Ablenkungsmanöver planen (falls nötig)", completed: false, priority: "medium" },
+                            { text: 'Nadja am Partytag "weglocken" bis alles bereit ist', completed: false, priority: "high" },
+                            { text: "Gäste über Geheimhaltung informieren", completed: false, priority: "high" }
+                        ]
+                    }
+                }
+            },
+            "gaeste-management": {
+                title: "📋 Gäste-Management",
+                priority: "high",
+                subcategories: {
+                    "rsvp": {
+                        title: "📊 RSVP Tracking",
+                        tasks: [
+                            { text: "Admin-Dashboard regelmäßig checken (admin.html)", completed: false, priority: "high" },
+                            { text: "Finale Gästezahl bestätigen (25. Juli)", completed: false, priority: "high" },
+                            { text: "Absagen nachfassen (höflich nachfragen)", completed: false, priority: "medium" },
+                            { text: "Essen entsprechend anpassen", completed: false, priority: "high" }
+                        ]
+                    },
+                    "kommunikation": {
+                        title: "📞 Kommunikation",
+                        tasks: [
+                            { text: "WhatsApp-Gruppe für Helfer erstellen", completed: false, priority: "medium" },
+                            { text: "Aufgaben an Helfer verteilen", completed: false, priority: "medium" },
+                            { text: "Notfallkontakte sammeln", completed: false, priority: "low" }
+                        ]
+                    }
+                }
+            },
+            "partytag": {
+                title: "⏰ Partytag (01.08.2025)",
+                priority: "high",
+                subcategories: {
+                    "vormittag": {
+                        title: "🌅 Vormittag (9:00 - 12:00)",
+                        tasks: [
+                            { text: "Letzte Einkäufe (Eis, frische Sachen)", completed: false, priority: "high" },
+                            { text: "Dekoration aufhängen", completed: false, priority: "high" },
+                            { text: "Essen vorbereiten", completed: false, priority: "high" }
+                        ]
+                    },
+                    "mittag": {
+                        title: "🕐 Mittag (12:00 - 14:30)",
+                        tasks: [
+                            { text: "Haus final herrichten", completed: false, priority: "high" },
+                            { text: "Musik testen", completed: false, priority: "medium" },
+                            { text: "Getränke kalt stellen", completed: false, priority: "high" },
+                            { text: 'Nadja "wegschicken" (Spaziergang, Besorgungen, etc.)', completed: false, priority: "high" }
+                        ]
+                    },
+                    "party-start": {
+                        title: "🎉 Party-Start (14:30 - 15:00)",
+                        tasks: [
+                            { text: "Gäste empfangen", completed: false, priority: "high" },
+                            { text: "Alle verstecken/positionieren", completed: false, priority: "high" },
+                            { text: "Nadja zurückholen", completed: false, priority: "high" },
+                            { text: '"ÜBERRASCHUNG!" rufen 🎊', completed: false, priority: "high" }
+                        ]
+                    }
+                }
+            }
+        };
+
+        let currentEditingTask = null;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCategories();
+            updateStats();
+            setupEventListeners();
+            loadFromLocalStorage();
+        });
+
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('searchBox').addEventListener('input', function(e) {
+                filterTasks(e.target.value);
+            });
+
+            // Close modal when clicking outside
+            document.getElementById('editModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEditModal();
+                }
+            });
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            Object.keys(partyData).forEach(categoryKey => {
+                const category = partyData[categoryKey];
+                const categoryElement = createCategoryElement(categoryKey, category);
+                container.appendChild(categoryElement);
+            });
+        }
+
+        function createCategoryElement(categoryKey, category) {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = `category priority-${category.priority}`;
+            categoryDiv.id = `category-${categoryKey}`;
+
+            const totalTasks = getTotalTasksInCategory(category);
+            const completedTasks = getCompletedTasksInCategory(category);
+            const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            categoryDiv.innerHTML = `
+                <div class="category-header" onclick="toggleCategory('${categoryKey}')">
+                    <div class="category-title">${category.title}</div>
+                    <div class="category-stats">
+                        <span>${completedTasks}/${totalTasks} erledigt</span>
+                        <span>${progressPercent}%</span>
+                    </div>
+                </div>
+                <div class="category-content">
+                    ${Object.keys(category.subcategories).map(subKey => 
+                        createSubcategoryHTML(categoryKey, subKey, category.subcategories[subKey])
+                    ).join('')}
+                </div>
+            `;
+
+            return categoryDiv;
+        }
+
+        function createSubcategoryHTML(categoryKey, subKey, subcategory) {
+            return `
+                <div class="subcategory">
+                    <div class="subcategory-title">${subcategory.title}</div>
+                    ${subcategory.tasks.map((task, taskIndex) => 
+                        createTaskHTML(categoryKey, subKey, taskIndex, task)
+                    ).join('')}
+                    <div class="add-todo">
+                        <input type="text" placeholder="Neue Aufgabe hinzufügen..." 
+                               onkeypress="handleAddTask(event, '${categoryKey}', '${subKey}')">
+                        <button onclick="addNewTask('${categoryKey}', '${subKey}')">Hinzufügen</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTaskHTML(categoryKey, subKey, taskIndex, task) {
+            return `
+                <div class="todo-item ${task.completed ? 'completed' : ''} priority-${task.priority}" 
+                     data-category="${categoryKey}" data-subcategory="${subKey}" data-task="${taskIndex}">
+                    <div class="todo-checkbox ${task.completed ? 'checked' : ''}" 
+                         onclick="toggleTask('${categoryKey}', '${subKey}', ${taskIndex})">
+                        ${task.completed ? '✓' : ''}
+                    </div>
+                    <div class="todo-text">${task.text}</div>
+                    <div class="todo-actions">
+                        <button class="action-btn edit-btn" 
+                                onclick="editTask('${categoryKey}', '${subKey}', ${taskIndex})" 
+                                title="Bearbeiten">✏️</button>
+                        <button class="action-btn delete-btn" 
+                                onclick="deleteTask('${categoryKey}', '${subKey}', ${taskIndex})" 
+                                title="Löschen">🗑️</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleCategory(categoryKey) {
+            const category = document.getElementById(`category-${categoryKey}`);
+            category.classList.toggle('expanded');
+        }
+
+        function toggleTask(categoryKey, subKey, taskIndex) {
+            partyData[categoryKey].subcategories[subKey].tasks[taskIndex].completed = 
+                !partyData[categoryKey].subcategories[subKey].tasks[taskIndex].completed;
+            
+            saveToLocalStorage();
+            
+            // Remember which categories are expanded before re-rendering
+            const expandedCategories = [];
+            document.querySelectorAll('.category.expanded').forEach(cat => {
+                expandedCategories.push(cat.id);
+            });
+            
+            renderCategories();
+            
+            // Restore expanded state
+            expandedCategories.forEach(categoryId => {
+                const category = document.getElementById(categoryId);
+                if (category) {
+                    category.classList.add('expanded');
+                }
+            });
+            
+            updateStats();
+        }
+
+        function editTask(categoryKey, subKey, taskIndex) {
+            const task = partyData[categoryKey].subcategories[subKey].tasks[taskIndex];
+            currentEditingTask = { categoryKey, subKey, taskIndex };
+            
+            document.getElementById('editTaskText').value = task.text;
+            document.getElementById('editTaskPriority').value = task.priority;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function deleteTask(categoryKey, subKey, taskIndex) {
+            if (confirm('Möchtest du diese Aufgabe wirklich löschen?')) {
+                partyData[categoryKey].subcategories[subKey].tasks.splice(taskIndex, 1);
+                saveToLocalStorage();
+                
+                // Remember which categories are expanded before re-rendering
+                const expandedCategories = [];
+                document.querySelectorAll('.category.expanded').forEach(cat => {
+                    expandedCategories.push(cat.id);
+                });
+                
+                renderCategories();
+                
+                // Restore expanded state
+                expandedCategories.forEach(categoryId => {
+                    const category = document.getElementById(categoryId);
+                    if (category) {
+                        category.classList.add('expanded');
+                    }
+                });
+                
+                updateStats();
+            }
+        }
+
+        function addNewTask(categoryKey, subKey) {
+            const input = event.target.previousElementSibling;
+            const text = input.value.trim();
+            
+            if (text) {
+                partyData[categoryKey].subcategories[subKey].tasks.push({
+                    text: text,
+                    completed: false,
+                    priority: 'medium'
+                });
+                
+                input.value = '';
+                saveToLocalStorage();
+                
+                // Remember which categories are expanded before re-rendering
+                const expandedCategories = [];
+                document.querySelectorAll('.category.expanded').forEach(cat => {
+                    expandedCategories.push(cat.id);
+                });
+                
+                renderCategories();
+                
+                // Restore expanded state
+                expandedCategories.forEach(categoryId => {
+                    const category = document.getElementById(categoryId);
+                    if (category) {
+                        category.classList.add('expanded');
+                    }
+                });
+                
+                updateStats();
+            }
+        }
+
+        function handleAddTask(event, categoryKey, subKey) {
+            if (event.key === 'Enter') {
+                addNewTask(categoryKey, subKey);
+            }
+        }
+
+        function saveTask() {
+            if (currentEditingTask) {
+                const { categoryKey, subKey, taskIndex } = currentEditingTask;
+                const task = partyData[categoryKey].subcategories[subKey].tasks[taskIndex];
+                
+                task.text = document.getElementById('editTaskText').value;
+                task.priority = document.getElementById('editTaskPriority').value;
+                
+                saveToLocalStorage();
+                renderCategories();
+                updateStats();
+                closeEditModal();
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            currentEditingTask = null;
+        }
+
+        function getTotalTasksInCategory(category) {
+            let total = 0;
+            Object.keys(category.subcategories).forEach(subKey => {
+                total += category.subcategories[subKey].tasks.length;
+            });
+            return total;
+        }
+
+        function getCompletedTasksInCategory(category) {
+            let completed = 0;
+            Object.keys(category.subcategories).forEach(subKey => {
+                completed += category.subcategories[subKey].tasks.filter(task => task.completed).length;
+            });
+            return completed;
+        }
+
+        function updateStats() {
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            Object.keys(partyData).forEach(categoryKey => {
+                const category = partyData[categoryKey];
+                totalTasks += getTotalTasksInCategory(category);
+                completedTasks += getCompletedTasksInCategory(category);
+            });
+
+            const remainingTasks = totalTasks - completedTasks;
+            const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            document.getElementById('totalTasks').textContent = totalTasks;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            document.getElementById('remainingTasks').textContent = remainingTasks;
+            document.getElementById('progressPercent').textContent = progressPercent + '%';
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+        }
+
+        function filterTasks(searchTerm) {
+            const categories = document.querySelectorAll('.category');
+            
+            categories.forEach(category => {
+                const tasks = category.querySelectorAll('.todo-item');
+                let hasVisibleTasks = false;
+                
+                tasks.forEach(task => {
+                    const text = task.querySelector('.todo-text').textContent.toLowerCase();
+                    const matches = text.includes(searchTerm.toLowerCase());
+                    
+                    task.style.display = matches ? 'flex' : 'none';
+                    if (matches) hasVisibleTasks = true;
+                });
+                
+                category.style.display = hasVisibleTasks || searchTerm === '' ? 'block' : 'none';
+            });
+        }
+
+        function showAllCategories() {
+            document.querySelectorAll('.category').forEach(cat => cat.style.display = 'block');
+            document.querySelectorAll('.todo-item').forEach(task => task.style.display = 'flex');
+            document.getElementById('searchBox').value = '';
+        }
+
+        function showOnlyIncomplete() {
+            document.querySelectorAll('.category').forEach(cat => {
+                const incompleteTasks = cat.querySelectorAll('.todo-item:not(.completed)');
+                cat.style.display = incompleteTasks.length > 0 ? 'block' : 'none';
+            });
+            
+            document.querySelectorAll('.todo-item').forEach(task => {
+                task.style.display = task.classList.contains('completed') ? 'none' : 'flex';
+            });
+        }
+
+        function showOnlyCompleted() {
+            document.querySelectorAll('.category').forEach(cat => {
+                const completedTasks = cat.querySelectorAll('.todo-item.completed');
+                cat.style.display = completedTasks.length > 0 ? 'block' : 'none';
+            });
+            
+            document.querySelectorAll('.todo-item').forEach(task => {
+                task.style.display = task.classList.contains('completed') ? 'flex' : 'none';
+            });
+        }
+
+        function exportProgress() {
+            let exportText = '🎉 NADJAS PARTY - FORTSCHRITT 🎉\n\n';
+            exportText += `Stand: ${new Date().toLocaleDateString('de-DE')} um ${new Date().toLocaleTimeString('de-DE')}\n\n`;
+            
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            Object.keys(partyData).forEach(categoryKey => {
+                const category = partyData[categoryKey];
+                const categoryTotal = getTotalTasksInCategory(category);
+                const categoryCompleted = getCompletedTasksInCategory(category);
+                const categoryProgress = categoryTotal > 0 ? Math.round((categoryCompleted / categoryTotal) * 100) : 0;
+                
+                totalTasks += categoryTotal;
+                completedTasks += categoryCompleted;
+                
+                exportText += `${category.title}\n`;
+                exportText += `Fortschritt: ${categoryCompleted}/${categoryTotal} (${categoryProgress}%)\n`;
+                exportText += '='.repeat(50) + '\n';
+                
+                Object.keys(category.subcategories).forEach(subKey => {
+                    const subcategory = category.subcategories[subKey];
+                    exportText += `\n${subcategory.title}:\n`;
+                    
+                    subcategory.tasks.forEach(task => {
+                        const status = task.completed ? '✅' : '❌';
+                        const priority = task.priority === 'high' ? '🔴' : task.priority === 'medium' ? '🟡' : '🟢';
+                        exportText += `  ${status} ${priority} ${task.text}\n`;
+                    });
+                });
+                
+                exportText += '\n\n';
+            });
+            
+            const overallProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            exportText += `GESAMT-FORTSCHRITT: ${completedTasks}/${totalTasks} (${overallProgress}%)\n`;
+            exportText += `Noch zu erledigen: ${totalTasks - completedTasks} Aufgaben\n\n`;
+            exportText += '🎯 Ziel: Nadja den schönsten 40. Geburtstag schenken! 🎂✨';
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(exportText).then(() => {
+                alert('✅ Fortschritt wurde in die Zwischenablage kopiert!');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = exportText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ Fortschritt wurde kopiert!');
+            });
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('nadjaPartyPlanner', JSON.stringify(partyData));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('nadjaPartyPlanner');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                // Merge saved data with default data to ensure new tasks are included
+                Object.keys(partyData).forEach(categoryKey => {
+                    if (savedData[categoryKey]) {
+                        Object.keys(partyData[categoryKey].subcategories).forEach(subKey => {
+                            if (savedData[categoryKey].subcategories && savedData[categoryKey].subcategories[subKey]) {
+                                partyData[categoryKey].subcategories[subKey].tasks.forEach((task, index) => {
+                                    if (savedData[categoryKey].subcategories[subKey].tasks[index]) {
+                                        task.completed = savedData[categoryKey].subcategories[subKey].tasks[index].completed;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+                renderCategories();
+                updateStats();
+            }
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(saveToLocalStorage, 30000);
+
+        console.log('🎉 Party Planner geladen!');
+        console.log('💾 Fortschritt wird automatisch gespeichert');
+    </script>
+</body>
+</html>
